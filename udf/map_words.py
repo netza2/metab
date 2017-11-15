@@ -5,23 +5,21 @@ import random
 from collections import namedtuple
 
 APP_HOME = os.environ['APP_HOME']
+
 #Words mapped
 #w = open(APP_HOME + '/input/words.tsv','r')
 #words = w.readlines()
 #w.close()
-
-
 #for i in range(len(words)): words[i] = words[i].strip('\n')
-w = []
 #for i in words:
  #   if i.find(" ") == -1:
   #      for n in i.split(" "): w.append(n)
    # else: w.append(i)
-
 #words = ['promiscuous','promiscuously','promiscuity','function','novel','function','functions','functional', 'escherichia', 'coli','e.']
 
-w = ['promiscuous','promiscuity','novel','function','moonlight','promiscuously']
-words = ['promiscuous','promiscuity','novel function','moonlight','promiscuously']
+
+w = ['promiscuous','promiscuity','novel','function','moonlight','promiscuously', 'substrate', 'catalytic']
+words = ['promiscuous','promiscuity','novel function','moonlight','promiscuously', 'substrate promiscuity', 'catalytic promiscuity']
 words = set(words)
 
 w = set(w)
