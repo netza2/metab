@@ -1331,7 +1331,6 @@ L-aspartic aminotransferase
 ynbE
 ynbD
 manX
-manY
 manZ
 manA
 manB
@@ -2763,7 +2762,9 @@ phoR
 phoU
 NAD+ transhydrogenase
 prolinase
-thiS
+b4407
+ECK3983
+JW3955
 DXP-reductoisomerase
 thiQ
 thiP
@@ -8777,7 +8778,6 @@ deoxycytidine triphosphate deaminase
 symE
 methionine sulfoxide reductase
 ptr
-AS
 ftsZ
 nucleotide phosphate kinase
 cheM
@@ -9587,6 +9587,7 @@ rpsN
 phosphoacylase
 cystathionine synthase
 ptsP
+ptsx
 adenylylcyclase
 rsfS
 2'-deoxythymidine kinase
@@ -10441,7 +10442,6 @@ fabB
 1-deoxy-D-xylulose 5-phosphate:thiol sulfurtransferase
 coproporphyrinogen-III:S-adenosyl-L-methionine oxidoreductase
 fabJ
-coa
 glutamine phosphoribosyldiphosphate amidotransferase
 az
 DNA-cytosine 5-methylase

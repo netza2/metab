@@ -2,13 +2,13 @@
 from deepdive import *
 import os
 
-##metabolites
+## extraction of metabolites
 APP_HOME = os.environ['APP_HOME']
 
 
-M = open(APP_HOME + '/input/Metab.tsv','r')
-Me = M.readlines()
-M.close()
+#M = open(APP_HOME + '/input/Metab.tsv','r')
+#Me = M.readlines()
+#M.close()
 
 m = open(APP_HOME +'/input/metabol.tsv','r')
 me = m.readlines()
@@ -25,9 +25,9 @@ for i in me:
 words = set(words)
 Metabolites = set(Metabolites)
 
-exact = {'co','cO','CO','cA','ca','CA','aG', 'AG','ag','cD', 'CD','cd', 'CU','cu','cU', 'HG','hg','hG','CL','cl','cL','FE','fe','fE','Mn','MN','mN','mn','Mg','mg','mG','No','no','Camp','camp','k','NA','na','nA','h'}
+exact = {'co','cO','CO','cA','ca','CA','aG', 'AG','ag','cD', 'CD','cd', 'CU','cu','cU', 'HG','hg','hG','CL','cl','cL','FE','fe','fE','Mn','MN','mN','mn','MG','mg','mG','No','no','Camp','camp','k','NA','na','nA','h'}
 
-@tsv_extractor
+@tsj_extractor
 @returns(lambda
         mention_id       = "text",
         mention_text     = "text",
