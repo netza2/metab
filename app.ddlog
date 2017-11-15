@@ -44,92 +44,49 @@ articles(
 ).
 
 
-#***** Sentences table with parsed text.
-#    
-
+#***** Sentences table with parsed text.   
 sentences(
-    doc_id         text,
-    sentence_index int,
-    tokens         json,
-    lemmas         json,
-    pos_tags       json,
-    ner_tags       json,
-    doc_offsets    json,
-    dep_types      json,
+    doc_id         text, sentence_index int,
+    tokens         json, lemmas         json,
+    pos_tags       json, ner_tags       json,
+    doc_offsets    json, dep_types      json,
     dep_tokens     json
 ).
 sentences_tsv
 (
-    doc_id         text, 
-    sentence_index int,
-    tokens_index   int[],
-    tokens         text[],
-    pos_tags       text[],
-    ner_tags       text[], 
-    lemmas         text[],
-    dep_types      text[],
-    dep_tokens     int[],
-    doc_offsets    text[]
+    doc_id         text, sentence_index int,
+    tokens_index   int[], tokens         text[],
+    pos_tags       text[], ner_tags       text[], 
+    lemmas         text[], dep_types      text[],
+    dep_tokens     int[], doc_offsets    text[]
 ).
 
-#function pass_data over (
- #   doc_id         text,
-#    sentence_index int,
-#    tokens         text[],
-#    pos_tags       text[],
-#    ner_tags       text[],
-#    lemmas         text[],
-#    dep_types      text[],
-#    dep_tokens     int[],
-#    doc_offsets    text[]
-#    ) return rows like sentences_tsj
-#    implementation "" handles tsv lines.
-    
-#sentences_tsj += pass_data() :- 
-#    sentences_tsv(doc_id, sentence_index, _,  tokens, pos_tags, ner_tags, lemmas, dep_types, dep_tokens, doc_offsets).
-
+   
 #deepdive sql 'INSERT INTO sentences (SELECT doc_id, sentence_index, to_json(tokens) AS tokens, to_json(lemmas) AS lemmas, to_json(pos_tags) AS pos_tags,to_json(ner_tags) AS ner_tags, to_json(doc_offsets) AS doc_offsets, to_json(dep_types) AS dep_types, to_json(dep_tokens) AS dep_tokens FROM sentences_tsv)'
 
-
 #**** Bazaar's parser function
-
 function nlp_markup over (
-	
 	 doc_id	    text,
 	 content    text
-
 	 ) returns rows like sentences
 	 implementation "udf/nlp_markup.sh" handles tsj lines.
-
 ## CREATE SENTENCES ##
 sentences+= nlp_markup(doc_id, content) :-
 	  articles(doc_id, content).
 
 ##*** Tables to save enzymes and metabolites information (NOT USED)
-#enzymes(
- #       EC text,
-#        name text,
- #       other_names text[],
-  #      reaction text,
- #       comments text
-#).
-#metabolites(
-        #formula text,
-#        names text[]
-#).
+#enzymes(EC text, name text, other_names text[], reaction text, comments text).
+#metabolites(formula text, names text[]).
 ###########################################
 
 # **** mention_enz is a table of enzyme mentions mapped from 
 #    the sentences table using the map_enz
 #    function. The extraction command is
 #    the third part of this code.
-
 mention_enz(
-
     mention_id text,
     mention_text text,
     doc_id text,
-
     sentence_index int,
     begin_index int,
     end_index int
@@ -144,10 +101,26 @@ function map_enz over (
     ) returns rows like mention_enz
     implementation "udf/map_enz.py" handles tsj lines.
 
-mention_enz += map_enz(
+mention_enz += map_enz (
     doc_id, sentence_index, tokens, pos_tags,ner_tags
 ) :- sentences(doc_id, sentence_index, tokens, _, pos_tags, ner_tags, _, _, _).
 
+mention_met( mention_id text,
+             mention_text text,
+             doc_id text, sentence_index int, begin_index int, end_index int ).
+
+function map_mention_m over (
+        doc_id text, 
+        sentence_index int,
+        tokens text[],
+        pos_tags text[],
+        ner_tags text[]
+    ) returns rows like mention_met
+    implementation "udf/map_mention_m.py" handles tsj lines.
+
+mention_met += map_mention_m (
+     doc_id, sentence_index, tokens, pos_tags,ner_tags
+) :- sentences(doc_id, sentence_index, tokens, _, pos_tags, ner_tags, _, _, _).
 
 mention_e(
     mention_id text,
@@ -223,6 +196,32 @@ candidates (
 candidates(p1_id, p1_mention, p2_id, p2_mention) :-
     mention_enz(p1_id, p1_mention, doc_id, sentence_index, p1_begin, _),
     mention_w(p2_id, p2_mention, doc_id, sentence_index, p2_begin, _).
+
+candidates_enz_met (
+        p1_id text,
+        p1_mention text,
+        p2_id text,
+        p2_mention text
+).
+
+candidates_enz_met(p1_id, p1_mention, p2_id, p2_mention) :-
+    mention_enz(p1_id, p1_mention, doc_id, sentence_index, p1_begin, _),
+    mention_met(p2_id, p2_mention, doc_id, sentence_index, p2_begin, _),
+    p1_begin != p2_begin.
+
+candidates_enz_eco_w (
+        p1_id text,
+        p1_mention text,
+        p2_id text,
+        p2_mention text,
+        p3_id text,
+        p3_mention text
+).
+
+candidates_enz_eco_w(p1_id, p1_mention, p2_id, p2_mention, p3_id, p3_mention) :-
+    mention_enz(p1_id, p1_mention, doc_id, sentence_index, p1_begin, _),
+    mention_w(p2_id, p2_mention, doc_id, sentence_index, p2_begin, _),
+    mention_e(p3_id, p3_mention, doc_id, sentence_index, p3_begin, _).
 
 #  Commented rules. p2_mention is a word mapped form a small set of key words, 
 #  it can't be equal to an enzyme mention (p1_mention). Both mentions are from 

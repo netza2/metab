@@ -10,7 +10,7 @@ APP_HOME = os.environ['APP_HOME']
 #with open(APP_HOME + '/input/enzymes_names.tsv','r') as E1: enz1 = E1.readlines()
 #with open(APP_HOME + '/input/enzymes_names_n.tsv','r') as E2: enz_n = E2.readlines()
 with open(APP_HOME + '/input/enz_words.tsv', 'r') as E: enz = E.readlines()
-with open(APP_HOME + '/input/dois.tsv', 'r') as d: dois = d.readlines()
+#with open(APP_HOME + '/input/dois.tsv', 'r') as d: dois = d.readlines()
 
 words = []
 words_o = []
@@ -25,8 +25,8 @@ for i in enz:
 words_o = set(words_o)
 words = set(words)
 enz = set(enz)
-for i in range(len(dois)): dois[i]  = dois[i].strip('\n')
-dois = set(dois)
+#for i in range(len(dois)): dois[i]  = dois[i].strip('\n')
+#dois = set(dois)
 #c = 0
 #print >> sys.stderr, '\n\n\n\n\n' + str('adp-glucose' in words) + '\n\n\n\n\n'
 #print >> sys.stderr,"##################" +  "\n\n\n\n\nWORDS ALONE:" + str(len(words_o)) + "\nWORDS: " + str(len(words)) + "\nENZYMES: " + str(len(enz)) + '\n\n\n\n\n'
@@ -58,8 +58,8 @@ def map_enz(
 #   global c
 
     num_tokens = len(tokens)
-    print >> sys.stderr, doc_id
-    if num_tokens < 130 and doc_id in dois:
+#    print >> sys.stderr, doc_id
+    if num_tokens < 130:# and doc_id in dois:
         first_indexes = []
         for i in range(num_tokens):
 #            if tokens[i].lower() == 'adp-glucose': print >> sys.stderr, '\n\n\n\n\n' +tokens[i]  + '\n\n\n\n\n'
